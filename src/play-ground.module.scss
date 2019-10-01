@@ -1,0 +1,47 @@
+.bigBox {
+  background: gray;
+  border: 1px solid gray;
+  padding: 10px;
+  width: 50%;
+}
+
+.playGround {
+  border: 1px solid gray;
+  display: flex;
+  padding: 10px;
+}
+
+.gameInputArea {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-areas: 
+    "green-box red-box"
+    "blue-box yellow-box";
+  grid-template-rows: auto;
+  width: 50%;
+}
+
+.redBox {
+  background-color: red;
+  grid-area: red-box;
+}
+
+.blueBox {
+  background-color: blue;
+  grid-area: blue-box;
+}
+
+.greenBox {
+  background-color: green;
+  grid-area: green-box
+}
+
+.yellowBox {
+  background-color: yellow;
+  grid-area: yellow-box
+}
+
+.smallBox {
+  border: 1px solid gray;
+  padding: 10px;
+}
