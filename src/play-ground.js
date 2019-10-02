@@ -2,14 +2,14 @@ import classnames from 'classnames';
 import React, {Component} from 'react';
 import * as styles from './play-ground.module.scss';
 
-function getStyleNameForColor(color) {
-  const colorToStyleName = {
-    red: 'redBox',
-    green: 'greenBox',
-    blue: 'blueBox',
-    yellow: 'yellowBox'
-  };
+const colorToStyleName = {
+  red: 'redBox',
+  green: 'greenBox',
+  blue: 'blueBox',
+  yellow: 'yellowBox'
+};
 
+function getStyleNameForColor(color) {
   return colorToStyleName[color] || '';
 }
 
@@ -17,13 +17,27 @@ const computeResult= (actualColors, userColors) => {
   const isAValidSelection = actualColors.length === userColors.length && actualColors.every((color, index) => color === userColors[index]);
 
   const resultText = {
-    true: 'Success',
-    false: 'Failed'
+    true: 'Yaay!!!',
+    false: 'Try Again!!'
   };
 
-  console.log(resultText[isAValidSelection])
   return resultText[isAValidSelection];
 };
+
+const shuffleColors =  (colors) => {
+  const shuffled = colors.slice();
+
+  const swap = (arr, i, j) => {
+    let tmp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = tmp;
+}
+
+for(let index in colors) {
+  swap(shuffled, index, Math.floor(Math.random() * colors.length));
+}
+return shuffled;
+}
 
 export class PlayGround extends Component {
   handleUserColorSelection = (color) => {
@@ -33,17 +47,13 @@ export class PlayGround extends Component {
 
   };
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      colors: ['red', 'green', 'blue', 'yellow'],
-      displayedColor: '',
-      selectedColors: []
-    };
-  }
-
-  componentDidMount() {
+  handleStartGame = () => {
     let counter = 0;
+    this.setState({
+      colors: shuffleColors(this.state.colors),
+      enableColorSelection: false
+    })
+
     const intervalId = setInterval(() => {
       this.setState({
         displayedColor: this.state.colors[counter]
@@ -51,7 +61,9 @@ export class PlayGround extends Component {
       counter += 1;
       if (counter === 5) {
         this.setState({
-          displayedColor: ''
+          displayedColor: '',
+          enableColorSelection: true,
+          selectedColors: []
         });
         clearInterval(intervalId);
       }
@@ -59,24 +71,58 @@ export class PlayGround extends Component {
 
   }
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      colors: Object.keys(colorToStyleName),
+      displayedColor: '',
+      enableColorSelection: false,
+      selectedColors: []
+    };
+  }
+
   render() {
     const colorStyle = getStyleNameForColor(this.state.displayedColor);
-    const blah = computeResult(this.state.colors, this.state.selectedColors)
+    const result = computeResult(this.state.colors, this.state.selectedColors)
+    console.dir(this.state)
 
     return (
       <div className={styles.playGround}>
+          <button 
+            className={styles.startGame} 
+            onClick={this.handleStartGame}
+          >
+            Start
+          </button>
           <div className={classnames(styles.bigBox, styles[colorStyle])} />
           <div className={styles.gameInputArea}>
-            <div className={classnames(styles.smallBox, styles.greenBox)} onClick={() => this.handleUserColorSelection('green')} />
-            <div className={classnames(styles.smallBox, styles.blueBox)} onClick={() => this.handleUserColorSelection('blue')}/>
-            <div className={classnames(styles.smallBox, styles.redBox)} onClick={() => this.handleUserColorSelection('red')}/>
-            <div className={classnames(styles.smallBox, styles.yellowBox)} onClick={() => this.handleUserColorSelection('yellow')}/>
+            <button 
+                className={classnames(styles.smallBox, styles.greenBox)} 
+                disabled={!this.state.enableColorSelection}
+                onClick={() => this.handleUserColorSelection('green')} 
+            />
+            <button 
+                className={classnames(styles.smallBox, styles.blueBox)} 
+                disabled={!this.state.enableColorSelection}
+                onClick={() => this.handleUserColorSelection('blue')}
+            />
+            <button 
+                className={classnames(styles.smallBox, styles.redBox)}  
+                disabled={!this.state.enableColorSelection}
+                onClick={() => this.handleUserColorSelection('red')}
+            />
+            <button 
+                className={classnames(styles.smallBox, styles.yellowBox)} 
+                disabled={!this.state.enableColorSelection}
+                onClick={() => this.handleUserColorSelection('yellow')}
+            />
           </div>
-        {
-          this.state.selectedColors.length !== this.state.colors.length ?
-              'Pick a small box color' :
-              blah
-        }
+          <div className={styles.gameResult}>
+             {
+                 this.state.enableColorSelection &&
+                 this.state.selectedColors.length === this.state.colors.length ? result : ''
+             }
+          </div>
       </div>
     );
   }

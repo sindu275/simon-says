@@ -1,47 +1,73 @@
 .bigBox {
-  background: gray;
-  border: 1px solid gray;
+  background: #fbf7f7;
+  border: 1px solid lightgray;
+  grid-area: big-box;
   padding: 10px;
-  width: 50%;
 }
 
 .playGround {
   border: 1px solid gray;
-  display: flex;
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 0.25fr 1fr;
+  grid-template-areas:
+    ". start-game ."
+    "big-box . game-input-area"
+    ". game-result .";
   padding: 10px;
+}
+
+.startGame {
+  grid-area: start-game;
 }
 
 .gameInputArea {
   display: grid;
+  grid-area: game-input-area;
   grid-template-columns: 1fr 1fr;
-  grid-template-areas: 
-    "green-box red-box"
-    "blue-box yellow-box";
   grid-template-rows: auto;
-  width: 50%;
+}
+
+.gameResult {
+  grid-area: game-result;
+  text-align: center;
 }
 
 .redBox {
   background-color: red;
-  grid-area: red-box;
 }
 
 .blueBox {
   background-color: blue;
-  grid-area: blue-box;
 }
 
 .greenBox {
   background-color: green;
-  grid-area: green-box
 }
 
 .yellowBox {
   background-color: yellow;
-  grid-area: yellow-box
 }
 
 .smallBox {
   border: 1px solid gray;
+  cursor: pointer;
+  padding: 20px;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+.startGame {
+  background-color: #6DB9EE;
+  border: 1px solid #2F79AD;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: medium;
   padding: 10px;
+}
+
+.startGame:hover {
+  background-color: #2F79AD;
 }
